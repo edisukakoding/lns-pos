@@ -43,9 +43,9 @@
                 apps: [{
                     name: 'Master Data',
                     icon: 'images/monitor.png',
-                    width: 1200,
-                    height: 800,
-                    left: 350,
+                    width: 960,
+                    height: 500,
+                    left: 200,
                     top: 50,
                     href: '{{ route('layout.master') }}'
                 }, {
