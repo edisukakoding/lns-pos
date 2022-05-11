@@ -48,7 +48,7 @@
                     height: window.innerHeight - (window.innerHeight * .4),
                     left: window.innerWidth * .1,
                     top: window.innerHeight * .1,
-                    href: '{{ route('layout.master') }}'
+                    href: '{{ route('layout.master') }}',
                 }, {
                     name: 'Network',
                     icon: 'images/network.png',
