@@ -12,6 +12,7 @@
     <link rel="stylesheet" type="text/css" href="{{ asset('jquery-easyui-1.10.3/themes/icon.css') }}">
     <link rel="stylesheet" type="text/css"
           href="{{ asset('jquery-easyui-1.10.3/demo/jquery-easyui-desktop-1.0.1/desktop.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/loader.css') }}">
     <script type="text/javascript" src="{{ asset('jquery-easyui-1.10.3/jquery.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('jquery-easyui-1.10.3/jquery.easyui.min.js') }}"></script>
     <script type="text/javascript"
@@ -43,10 +44,10 @@
                 apps: [{
                     name: 'Master Data',
                     icon: 'images/monitor.png',
-                    width: 960,
-                    height: 500,
-                    left: 200,
-                    top: 50,
+                    width: window.innerWidth - (window.innerWidth * .2), // 960
+                    height: window.innerHeight - (window.innerHeight * .4),
+                    left: window.innerWidth * .1,
+                    top: window.innerHeight * .1,
                     href: '{{ route('layout.master') }}'
                 }, {
                     name: 'Network',
@@ -213,6 +214,14 @@
     </script>
 </head>
 <body>
+<div class="loader">
+    <div class="lds-ellipsis">
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+    </div>
+</div>
 <form action="{{ route('logout') }}" method="POST" id="fm-logout">
     @csrf
 </form>
@@ -235,5 +244,12 @@
 {{--        {{ $slot }}--}}
 {{--    </main>--}}
 {{--</div>--}}
+<script>
+    $(window).on('load', function(){
+        $('.loader').delay(1000).fadeOut(function(){
+            $(this).remove()
+        });
+    });
+</script>
 </body>
 </html>
