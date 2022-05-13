@@ -34,75 +34,73 @@ class DepartmentController extends Controller
     {
         $page           = $request->page ?? 1;
         $count          = $request->rows ?? 25;
-        return Json::encode([
-            'total' => Department::query()->count(),
-            'rows' => Department::query()->limit($count)->offset(($page * $count) - $count)->get()->toArray()
-        ]);
-    }
+        $query          = Department::query();
+        $total          = $query->count();
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
+        if(isset($request->sort) && isset($request->order)) {
+            $sorts  = explode(',', $request->sort);
+            $orders = explode(',', $request->order);
+
+            foreach ($sorts as $index => $sort) {
+                $query = $query->orderBy($sort, strtoupper($orders[$index]));
+            }
+        }
+
+        $query->limit($count)->offset(($page * $count) - $count);
+        return Json::encode([
+            'total' => $total,
+            'rows' => $query->get()->toArray(),
+            'sql' => $query->toSql()
+        ]);
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @return string
+     * @throws JsonException
      */
-    public function store(Request $request)
+    public function store(Request $request): string
     {
-        //
-    }
+        $department = Department::create($request->all());
+        if(!$department) {
+            return Json::encode(['errorMsg' => 'Failed to save data']);
+        }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Department  $department
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Department $department)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Department  $department
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Department $department)
-    {
-        //
+        return Json::encode(['successMsg' => 'Success to save data']);
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Department  $department
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @param Department $department
+     * @return string
+     * @throws JsonException
      */
-    public function update(Request $request, Department $department)
+    public function update(Request $request, Department $department): string
     {
-        //
+        if(!$department->update($request->all())){
+            return Json::encode(['errorMsg' => 'Failed to update data']);
+        }
+
+        return Json::encode(['successMsg' => 'Success to update data']);
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Department  $department
-     * @return \Illuminate\Http\Response
+     * @param Department $department
+     * @return string
+     * @throws JsonException
      */
-    public function destroy(Department $department)
+    public function destroy(Department $department): string
     {
-        //
+        if(!$department->delete()) {
+            return Json::encode(['errorMsg' => 'Failed to delete data']);
+        }
+
+        return Json::encode(['successMsg' => 'Success to delete data']);
     }
 }

@@ -19,24 +19,24 @@
             src="{{ asset('jquery-easyui-1.10.3/demo/jquery-easyui-desktop-1.0.1/jquery.desktop.js') }}"></script>
     <script>
         // custom ajax req for laravel
-        $.extend($.fn.datagrid.defaults, {
-            loader: function (param, success, error) {
-                let opts = $(this).datagrid('options');
-                if (!opts.url) return false;
-                $.ajax({
-                    type: opts.method,
-                    url: opts.url,
-                    data: {...param, "_token": "{{ csrf_token() }}"},
-                    dataType: 'json',
-                    success: function (data) {
-                        success(data);
-                    },
-                    error: function () {
-                        error.apply(this, arguments);
-                    }
-                });
-            }
-        });
+        {{--$.extend($.fn.datagrid.defaults, {--}}
+        {{--    loader: function (param, success, error) {--}}
+        {{--        let opts = $(this).datagrid('options');--}}
+        {{--        if (!opts.url) return false;--}}
+        {{--        $.ajax({--}}
+        {{--            type: opts.method,--}}
+        {{--            url: opts.url,--}}
+        {{--            data: {...param, "_token": "{{ csrf_token() }}"},--}}
+        {{--            dataType: 'json',--}}
+        {{--            success: function (data) {--}}
+        {{--                success(data);--}}
+        {{--            },--}}
+        {{--            error: function () {--}}
+        {{--                error.apply(this, arguments);--}}
+        {{--            }--}}
+        {{--        });--}}
+        {{--    }--}}
+        {{--});--}}
     </script>
     <script type="text/javascript">
         $(function () {
