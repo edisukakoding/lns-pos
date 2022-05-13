@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-{{--<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">--}}
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -140,14 +140,16 @@
                 $('body').desktop('openApp', settingsApp);
                 return;
             }
-            settingsApp = {
+            window.settingsApp = {
                 id: 'settings',
                 name: 'Settings',
-                width: 600,
-                height: 400,
+                width: window.innerWidth - (window.innerWidth * .3), // 960
+                height: window.innerHeight - (window.innerHeight * .2),
+                left: window.innerWidth * .15,
+                top: window.innerHeight * .1,
                 href: '{{ route('layout.setting') }}',
                 onBeforeClose: function () {
-                    settingsApp = null;
+                    window.settingsApp = null;
                 }
             };
             // $('body').desktop('openApp', settingsApp);
@@ -251,6 +253,10 @@
             $(this).remove()
         });
     });
+    @if(\Illuminate\Support\Facades\Auth::user()->setting->theme_id)
+    const link = $('head').find('link:first');
+    link.attr('href', '{{ asset('jquery-easyui-1.10.3/themes/'. Illuminate\Support\Facades\Auth::user()->setting->theme->value .'/easyui.css') }}');
+    @endif
 </script>
 </body>
 </html>

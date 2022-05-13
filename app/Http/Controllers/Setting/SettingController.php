@@ -4,20 +4,59 @@ namespace App\Http\Controllers\Setting;
 
 use App\Http\Controllers\Controller;
 use App\Models\Setting;
+use App\Models\Theme;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Nette\Utils\Json;
+use Nette\Utils\JsonException;
 
 class SettingController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
-     * @return Application|Factory|\Illuminate\Contracts\View\View
+     * @return Application|Factory|View
      */
-    public function index(): \Illuminate\Contracts\View\View|Factory|Application
+    public function index(): View|Factory|Application
     {
         return \view('setting.layout');
+    }
+
+
+    /**
+     * @throws JsonException
+     * @return string
+     */
+    public function getThemes(): string
+    {
+        $themes = Theme::all();
+        return Json::encode($themes);
+    }
+
+    /**
+     * @param string $value
+     * @return string
+     * @throws JsonException
+     */
+    public function setTheme(string $value): string
+    {
+        $setting    = Setting::query()->where(['user_id' => Auth::id()])->first();
+        $theme      = Theme::query()->where(['value' => $value])->first();
+        $setting->theme_id = $theme->id;
+        if(!$setting->save()) {
+            return Json::encode([
+                'status' => false,
+                'errorMsg' => 'Failed to change theme'
+            ]);
+        }
+
+        return Json::encode([
+            'status' => true,
+            'successMsg' => 'Theme has been change'
+        ]);
     }
 
     /**

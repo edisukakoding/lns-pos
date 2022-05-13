@@ -1,89 +1,82 @@
 <script type="text/javascript">
-    {{--$('#sm').sidemenu({--}}
-    {{--    data: [{--}}
-    {{--        text: 'Setting',--}}
-    {{--        iconCls: 'icon-setting',--}}
-    {{--        // state: 'open',--}}
-    {{--        children: [{--}}
-    {{--            text: 'Data',--}}
-    {{--            data: '{{ route('departments.index') }}'--}}
-    {{--        }, {--}}
-    {{--            text: 'Create'--}}
-    {{--        }, {--}}
-    {{--            text: 'Option3',--}}
-    {{--            children: [{--}}
-    {{--                text: 'Option31'--}}
-    {{--            }, {--}}
-    {{--                text: 'Option32'--}}
-    {{--            }]--}}
-    {{--        }]--}}
-    {{--    }, {--}}
-    {{--        text: 'Item2',--}}
-    {{--        iconCls: 'icon-more',--}}
-    {{--        children: [{--}}
-    {{--            text: 'Option4'--}}
-    {{--        }, {--}}
-    {{--            text: 'Option5'--}}
-    {{--        }, {--}}
-    {{--            text: 'Option6'--}}
-    {{--        }]--}}
-    {{--    }],--}}
-    {{--    onSelect: function (node) {--}}
-    {{--        const tabMaster = $('#tt');--}}
-    {{--        let isExists = tabMaster.tabs('exists', node.text);--}}
-    {{--        if(isExists) {--}}
-    {{--            const tab = tabMaster.tabs('getTab', node.text)--}}
-    {{--            const index = tabMaster.tabs('getTabIndex', tab);--}}
-    {{--            tabMaster.tabs('select', index);--}}
-    {{--        }else {--}}
-    {{--            tabMaster.tabs('add',{--}}
-    {{--                title: node.text,--}}
-    {{--                href: node.data,--}}
-    {{--                closable: true--}}
-    {{--            });--}}
-    {{--        }--}}
-    {{--    }--}}
-    {{--});--}}
-    $('#settings-dl').datalist({
-        fit: true,
-        data: [
-            {
-                "text": "Wallpaper",
-                "data": "{{ route('departments.index') }}"
+    (function () {
+        $('body').desktop('openApp', settingsApp);
+        const template = '<div>' +
+            '<div region="north" style="padding:5px;height:45px;text-align:right"></div>' +
+            '<div region="south" style="text-align:right;height:45px;padding:5px"></div>' +
+            '<div region="west" title="Background" split="true" style="width:120px"><table id="settings-dl"></table></div>' +
+            '<div region="center" title="Setting" class="easyui-tabs" id="tt-setting"></div>' +
+            '</div>';
+        const layout = $(template).appendTo('#settings');
+        layout.layout({
+            fit: true
+        });
+        const combo = $('<input>').appendTo(layout.layout('panel', 'north'));
+        combo.combobox({
+            url: '{{ route('setting.themes') }}',
+            queryParams: {
+              _token: '{{ csrf_token() }}'
             },
-            {"text": "Desktop2", "img": "images/bg2.jpg"},
-            {"text": "Desktop3", "img": "images/bg3.jpg"}
-        ],
-        // onLoadSuccess: function () {
-        //     $('#tt').tabs('add',{
-        //         title: 'Wallpaper',
-        //         content: 'Tab Njing!!',
-        //         closable: true
-        //     });
-        //     $(this).datalist('selectRow', 0);
-        // },
-        onSelect(index, row) {
-            const tabSetting = $('#tt');
-            let isExists = tabSetting.tabs('exists', row.text);
-            if(isExists) {
-                const tab = tabSetting.tabs('getTab', row.text)
-                const index = tabSetting.tabs('getTabIndex', tab);
-                tabSetting.tabs('select', index);
-            }else {
-                tabSetting.tabs('add',{
-                    title: row.text,
-                    href: row.data,
-                    closable: true
-                });
+            width: 300,
+            label: 'Themes: ',
+            value: '{{ \Illuminate\Support\Facades\Auth::user()->setting->theme->text }}',
+            editable: false,
+            panelHeight: 'auto',
+            onChange: function (theme) {
+                $.ajax({
+                    url: '{{ url('/setting/themes') }}/' + theme + '/set',
+                    method: 'POST',
+                    data: {_token: '{{ csrf_token() }}'},
+                    success(result) {
+                        const res = JSON.parse(result);
+                        if(res.status) {
+                            console.log(theme)
+                            const link = $('head').find('link:first');
+                            link.attr('href', '{{ asset('jquery-easyui-1.10.3/themes/') }}/' + theme + '/easyui.css');
+                            $.messager.show({
+                                title: 'Success',
+                                msg: res.successMsg
+                            });
+                        }else {
+                            $.messager.show({
+                                title: 'Failed',
+                                msg: res.errorMsg
+                            });
+                        }
+                    },
+                    error(err) {
+                        console.log(err)
+                        $.messager.show({
+                            title: 'Failed',
+                            msg: 'Failed to change theme, Internal server error'
+                        });
+                    }
+                })
+            },
+        });
+        $('#settings-dl').datalist({
+            fit: true,
+            data: [
+                {"text": "Wallpaper", "data" : "{{ route('settingwallpapers.index') }}"},
+            ],
+            // onLoadSuccess: function () {
+            //     $(this).datalist('selectRow', 0);
+            // },
+            onSelect(index, row) {
+                const tabSetting = $('#tt-setting');
+                let isExists = tabSetting.tabs('exists', row.text);
+                if(isExists) {
+                    const tab = tabSetting.tabs('getTab', row.text)
+                    const index = tabSetting.tabs('getTabIndex', tab);
+                    tabSetting.tabs('select', index);
+                }else {
+                    tabSetting.tabs('add',{
+                        title: row.text,
+                        href: row.data,
+                        closable: true
+                    });
+                }
             }
-        }
-    });
+        });
+    })();
 </script>
-<div class="easyui-layout" fit="true">
-    <div data-options="region:'west',split:true,hideCollapsedContent:true" title="" style="width:200px;">
-        <table id="settings-dl"></table>
-    </div>
-    <div data-options="region:'center',title:'Settings'">
-        <div id="tt" class="easyui-tabs" data-options="fit:true,border:false,plain:true"></div>
-    </div>
-</div>
