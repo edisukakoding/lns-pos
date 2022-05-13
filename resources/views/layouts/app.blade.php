@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+{{--<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">--}}
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -145,71 +145,72 @@
                 name: 'Settings',
                 width: 600,
                 height: 400,
+                href: '{{ route('layout.setting') }}',
                 onBeforeClose: function () {
                     settingsApp = null;
                 }
             };
-            $('body').desktop('openApp', settingsApp);
-            const template = '<div>' +
-                '<div region="north" style="padding:5px;height:45px;text-align:right"></div>' +
-                '<div region="south" style="text-align:right;height:45px;padding:5px"></div>' +
-                '<div region="west" title="Background" split="true" style="width:200px"><table id="settings-dl"></table></div>' +
-                '<div region="center" title="Preview"><img id="settings-img" style="border:0;width:100%;height:100%"></div>' +
-                '</div>';
-            const layout = $(template).appendTo('#settings');
-            layout.layout({
-                fit: true
-            });
-            const combo = $('<input>').appendTo(layout.layout('panel', 'north'));
-            combo.combobox({
-                data: [
-                    {value: 'default', text: 'Default', group: 'Base'},
-                    {value: 'gray', text: 'Gray', group: 'Base'},
-                    {value: 'metro', text: 'Metro', group: 'Base'},
-                    {value: 'material', text: 'Material', group: 'Base'},
-                    {value: 'material-teal', text: 'Material Teal', group: 'Base'},
-                    {value: 'bootstrap', text: 'Bootstrap', group: 'Base'},
-                    {value: 'black', text: 'Black', group: 'Base'},
-                ],
-                width: 300,
-                label: 'Themes: ',
-                value: 'material-teal',
-                editable: false,
-                panelHeight: 'auto',
-                onChange: function (theme) {
-                    const link = $('head').find('link:first');
-                    link.attr('href', 'https://www.jeasyui.com/easyui/themes/' + theme + '/easyui.css');
-                }
-            });
-            $('#settings-dl').datalist({
-                fit: true,
-                data: [
-                    {"text": "Desktop", "img": "images/bg.jpg"},
-                    {"text": "Desktop2", "img": "images/bg2.jpg"},
-                    {"text": "Desktop3", "img": "images/bg3.jpg"}
-                ],
-                onLoadSuccess: function () {
-                    $(this).datalist('selectRow', 0);
-                },
-                onSelect(index, row) {
-                    $('#settings-img').attr('src', row.img)
-                }
-            });
-            $('<a style="margin-right:10px"></a>').appendTo(layout.layout('panel', 'south')).linkbutton({
-                text: 'Ok',
-                width: 80,
-                onClick: function () {
-                    $('body').desktop('setWallpaper', $('#settings-dl').datalist('getSelected').img);
-                    $('#settings').window('close');
-                }
-            })
-            $('<a></a>').appendTo(layout.layout('panel', 'south')).linkbutton({
-                text: 'Cancel',
-                width: 80,
-                onClick: function () {
-                    $('#settings').window('close');
-                }
-            })
+            // $('body').desktop('openApp', settingsApp);
+            // const template = '<div>' +
+            //     '<div region="north" style="padding:5px;height:45px;text-align:right"></div>' +
+            //     '<div region="south" style="text-align:right;height:45px;padding:5px"></div>' +
+            //     '<div region="west" title="Background" split="true" style="width:200px"><table id="settings-dl"></table></div>' +
+            //     '<div region="center" title="Preview"><img id="settings-img" style="border:0;width:100%;height:100%"></div>' +
+            //     '</div>';
+            // const layout = $(template).appendTo('#settings');
+            // layout.layout({
+            //     fit: true
+            // });
+            // const combo = $('<input>').appendTo(layout.layout('panel', 'north'));
+            // combo.combobox({
+            //     data: [
+            //         {value: 'default', text: 'Default', group: 'Base'},
+            //         {value: 'gray', text: 'Gray', group: 'Base'},
+            //         {value: 'metro', text: 'Metro', group: 'Base'},
+            //         {value: 'material', text: 'Material', group: 'Base'},
+            //         {value: 'material-teal', text: 'Material Teal', group: 'Base'},
+            //         {value: 'bootstrap', text: 'Bootstrap', group: 'Base'},
+            //         {value: 'black', text: 'Black', group: 'Base'},
+            //     ],
+            //     width: 300,
+            //     label: 'Themes: ',
+            //     value: 'material-teal',
+            //     editable: false,
+            //     panelHeight: 'auto',
+            //     onChange: function (theme) {
+            //         const link = $('head').find('link:first');
+            //         link.attr('href', 'https://www.jeasyui.com/easyui/themes/' + theme + '/easyui.css');
+            //     }
+            // });
+            // $('#settings-dl').datalist({
+            //     fit: true,
+            //     data: [
+            //         {"text": "Desktop", "img": "images/bg.jpg"},
+            //         {"text": "Desktop2", "img": "images/bg2.jpg"},
+            //         {"text": "Desktop3", "img": "images/bg3.jpg"}
+            //     ],
+            //     onLoadSuccess: function () {
+            //         $(this).datalist('selectRow', 0);
+            //     },
+            //     onSelect(index, row) {
+            //         $('#settings-img').attr('src', row.img)
+            //     }
+            // });
+            // $('<a style="margin-right:10px"></a>').appendTo(layout.layout('panel', 'south')).linkbutton({
+            //     text: 'Ok',
+            //     width: 80,
+            //     onClick: function () {
+            //         $('body').desktop('setWallpaper', $('#settings-dl').datalist('getSelected').img);
+            //         $('#settings').window('close');
+            //     }
+            // })
+            // $('<a></a>').appendTo(layout.layout('panel', 'south')).linkbutton({
+            //     text: 'Cancel',
+            //     width: 80,
+            //     onClick: function () {
+            //         $('#settings').window('close');
+            //     }
+            // })
         }
     </script>
 </head>
