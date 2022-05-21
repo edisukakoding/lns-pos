@@ -24,12 +24,14 @@
     "@electron-forge/maker-deb": "^6.0.0-beta.63",
     "@electron-forge/maker-rpm": "^6.0.0-beta.63",
     "@electron-forge/maker-squirrel": "^6.0.0-beta.63",
+    "@electron-forge/maker-wix": "^6.0.0-beta.63",
     "@electron-forge/maker-zip": "^6.0.0-beta.63",
     "@tailwindcss/forms": "^0.4.0",
     "alpinejs": "^3.4.2",
     "autoprefixer": "^10.4.2",
     "axios": "^0.25",
     "electron": "^18.2.0",
+    "electron-wix-msi": "^4.0.0",
     "laravel-mix": "^6.0.6",
     "lodash": "^4.17.19",
     "postcss": "^8.4.6",
@@ -43,14 +45,10 @@
   },
   "config": {
     "forge": {
-      "packagerConfig": {},
+      "packagerConfig": {
+          "icon": "./public/favicon.ico"
+      },
       "makers": [
-        {
-          "name": "@electron-forge/maker-squirrel",
-          "config": {
-            "name": "lns_pos"
-          }
-        },
         {
           "name": "@electron-forge/maker-zip",
           "platforms": [
@@ -64,7 +62,15 @@
         {
           "name": "@electron-forge/maker-rpm",
           "config": {}
-        }
+        },
+          {
+              "name": "@electron-forge/maker-wix",
+              "config": {
+                  "ui": {
+                      "chooseDirectory": true
+                  }
+              }
+          }
       ]
     }
   }
